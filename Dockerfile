@@ -2,7 +2,8 @@
 FROM python:3.8.6-buster
 
 #i update the repositories
-RUN apt-get update
+RUN apt-get update && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 #I set the workdir and install the libraries
 WORKDIR /usr/src

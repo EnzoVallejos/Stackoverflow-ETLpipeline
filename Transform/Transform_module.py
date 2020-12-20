@@ -4,6 +4,11 @@ import json, re
 
 #Principal function
 def Transform(html):
+	'''
+		"stats_dictionary" create and save the dictionary where the stats of the questions are contained.
+		The dictionary is separated by 3 keys, "votes", "answer" and "views",
+		and since the data is dirty, use a regular expression to get only the numbers.
+	'''
 	soup_html_dirty = BeautifulSoup(html, 'html.parser')
 
 	html_user = get_html_with_attrs(soup_html_dirty, 'div', 'class', 'user-details')
@@ -16,11 +21,6 @@ def Transform(html):
 
 	html_stats = get_html_with_attrs(soup_html_dirty,'div', 'class', 'statscontainer')
 
-	'''
-		I create and save the dictionary where the stats of the questions are contained.
-		The dictionary is separated by 3 keys, "votes", "answer" and "views",
-		and since the data is dirty, use a regular expression to get only the numbers.
-	'''
 	stats_dictionary = make_stats_dictionary(html_stats, 
 			list_votes := [re.findall(r'\d+', i)[0] for i in find_with_attrs(html_stats,'div', 'class', 'vote')], 
 			list_answers := [re.findall(r'\d+', i)[0] for i in find_with_attrs(html_stats,'div', 'class', 'status')], 
@@ -39,6 +39,7 @@ def get_html_with_attrs(soup_html_dirty, element, attrs_1, attrs_2):
 def get_text_without_attrs(soup_html_dirty, element):
 	return [iterated_element.find(element).text for iterated_element in soup_html_dirty]
 
+def get_tags_list(html_question_sumary, element, attrs_1, attrs_2):
 '''
 	This function is responsible for obtaining the labels in text format,
 	and to separate each tag and save them in a list
@@ -47,7 +48,6 @@ def get_text_without_attrs(soup_html_dirty, element):
 	later, through a comprehension list, I split these tags and return a list, 
 	for example  ["java", "mysql", "jsp"]
 '''
-def get_tags_list(html_question_sumary, element, attrs_1, attrs_2):
 	tags_list = []
 	for tags in html_question_sumary:
 		tags_text = tags.find(element, attrs={attrs_1: attrs_2}).text.replace("\n", "")
@@ -58,13 +58,13 @@ def get_tags_list(html_question_sumary, element, attrs_1, attrs_2):
 def find_with_attrs(html_stats, element, attrs_1, attrs_2):
 	return [iterated_element.find(element, attrs={attrs_1: attrs_2}).text for iterated_element in html_stats]
 
+def make_stats_dictionary(html_stats, vote, answer, views):
 '''
 	"make_stats_dictionary" its operation is that it goes through the 3 arrays of view numbers, votes, etc, 
 	And it is creating dictionaries with that information, 
 	and adding them in a list containing all these dictionaries. 
 	So when I return the data of each answer the stats are in dictionary form
 '''
-def make_stats_dictionary(html_stats, vote, answer, views):
 	list_stats = []
 	cont = 0
 	for i in vote:
