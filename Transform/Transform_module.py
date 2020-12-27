@@ -1,6 +1,7 @@
 #"Transform" module, is responsible for transforming the data received from the Extract module
 from bs4 import BeautifulSoup
-import json, re
+import json
+import re
 
 #Principal function
 def Transform(html):
