@@ -30,8 +30,6 @@ def Transform(html):
 	list_of_links = get_links(soup_html_dirty)
 
 	return dictionary_maker(user, questions, tags, stats_dictionary, list_of_links)
-	#I return the data in json format
-	#return json.dumps(dictionary_maker(user, questions, tags, stats_dictionary), ensure_ascii=False)
 
 #get the html that contains the tags that indicate
 def get_html_with_attrs(soup_html_dirty, element, attrs_1, attrs_2):
